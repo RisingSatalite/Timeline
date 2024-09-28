@@ -9,15 +9,16 @@ import CollapsibleSpan from './collapsiblespan';
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
 export default function Editor() {
-  const [mermaidChart, setMermaidChart] = useState(`sequenceDiagram
-    Alice ->> Bob: Hello Bob, how are you?
-    Bob-->>John: How about you John?
-    Bob--x Alice: I am good thanks!
-    Bob-x John: I am good thanks!
-    Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+  const [mermaidChart, setMermaidChart] = useState(`timeline
+    title Timeline of Industrial Revolution
+    section 17th-20th century
+        Industry 1.0 : Machinery, Water power, Steam <br>power
+        Industry 2.0 : Electricity, Internal combustion engine, Mass production
+        Industry 3.0 : Electronics, Computers, Automation
+    section 21st century
+        Industry 4.0 : Internet, Robotics, Internet of Things
+        Industry 5.0 : Artificial intelligence, Big data, 3D printing
 
-    Bob-->Alice: Checking with John...
-    Alice->John: Yes... John, how are you?
   `);
   const [items, setItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -34,15 +35,16 @@ export default function Editor() {
   useEffect(() => {
     if(arrowList.length == 0){
       //Set to default
-      setMermaidChart(`sequenceDiagram
-      Alice ->> Bob: Hello Bob, how are you?
-      Bob-->>John: How about you John?
-      Bob--x Alice: I am good thanks!
-      Bob-x John: I am good thanks!
-      Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+      setMermaidChart(`timeline
+    title Timeline of Industrial Revolution
+    section 17th-20th century
+        Industry 1.0 : Machinery, Water power, Steam <br>power
+        Industry 2.0 : Electricity, Internal combustion engine, Mass production
+        Industry 3.0 : Electronics, Computers, Automation
+    section 21st century
+        Industry 4.0 : Internet, Robotics, Internet of Things
+        Industry 5.0 : Artificial intelligence, Big data, 3D printing
 
-      Bob-->Alice: Checking with John...
-      Alice->John: Yes... John, how are you?
       `)
       return
     }
