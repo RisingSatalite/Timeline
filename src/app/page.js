@@ -7,7 +7,7 @@ import Editor from '@/components/mermaideditor';
 export default function Home() {
   return (
     <main className=" items-center p-24">
-      <div>Sequence Diagram Maker</div>
+      <div>Timeline Diagram Maker</div>
       <Editor></Editor>
     </main>
   );

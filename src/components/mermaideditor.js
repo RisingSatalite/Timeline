@@ -13,6 +13,7 @@ export default function Editor() {
     title Timeline of Industrial Revolution
     section 17th-20th century
         Industry 1.0 : Machinery, Water power, Steam <br>power
+        Industry 1.0 : 2Machinery, Water power, Steam <br>power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
     section 21st century
@@ -20,11 +21,10 @@ export default function Editor() {
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
 
   `);
+  const [section, setSection] = useState([])
+
   const [items, setItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
-
-  const arrowTypes = ["->>", "-->>", "--x", "-x", "->", "-->", "-)", "--)"];
-  const [selectedArrow, setSelectedArrow] = useState('->>');
   
   const [selectedItem, setSelectedItem] = useState(null);
   const [toItem, setToItem] = useState([]);
@@ -39,6 +39,7 @@ export default function Editor() {
     title Timeline of Industrial Revolution
     section 17th-20th century
         Industry 1.0 : Machinery, Water power, Steam <br>power
+                     : Machinery, Water power, Steam <br>power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
     section 21st century
@@ -88,7 +89,7 @@ export default function Editor() {
 
   const addArrow = () => {
     if (selectedItem && toItem && arrowText.trim()) {
-      setArrowList([...arrowList, [ selectedItem, toItem, arrowText.trim(), selectedArrow]]);
+      setArrowList([...arrowList, [ selectedItem, toItem, arrowText.trim()]]);
       setArrowText('');
     }
   };
@@ -216,14 +217,6 @@ export default function Editor() {
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
                 <option value="">Add items</option>
                 {items.map((item, index) => (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-              <select value={selectedArrow} onChange={(e) => setSelectedArrow(e.target.value)}>
-                <option value="">Select arrow type</option>
-                {arrowTypes.map((item, index) => (
                   <option key={index} value={item}>
                     {item}
                   </option>
