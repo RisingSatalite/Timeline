@@ -22,7 +22,7 @@ export default function Editor() {
   `);
   const [section, setSection] = useState([])
 
-  const [items, setItems] = useState([]);
+  const [event, setEvents] = useState([]);
   const [inputValue, setInputValue] = useState('');
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -63,13 +63,13 @@ export default function Editor() {
 
   const addItem = () => {
     if (inputValue.trim()) {
-      setItems([...items, inputValue.trim()]);
+      setEvents([...event, inputValue.trim()]);
       setInputValue('');
     }
   };
 
   const removeItem = (index) => {
-    setItems(items.filter((_, i) => i !== index));
+    setEvents(event.filter((_, i) => i !== index));
   };
 
   const removeArrowList = (index) => {
@@ -158,7 +158,7 @@ export default function Editor() {
         }
         // Set columns
         // Use set to remove duplicates
-        setItems(Array.from(new Set(columns))); // Corrected to pass an array to setItems
+        setEvents(Array.from(new Set(columns)));
   
         setMermaidChart(importedData);
       } catch (error) {
@@ -203,7 +203,7 @@ export default function Editor() {
           />
           <button onClick={addItem}>Add Item</button>
 
-          {items.map((item, index) => (
+          {event.map((item, index) => (
               <div class="change" key={index}>
                 {item}
                 <button class="right" onClick={() => removeItem(index)}>Remove</button>
@@ -214,7 +214,7 @@ export default function Editor() {
               <h3>Add Text for: {selectedItem} to {toItem}</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
                 <option value="">Add event</option>
-                {items.map((item, index) => (
+                {event.map((item, index) => (
                   <option key={index} value={item}>
                     {item}
                   </option>
