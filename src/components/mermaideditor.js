@@ -12,14 +12,13 @@ export default function Editor() {
   const [mermaidChart, setMermaidChart] = useState(`timeline
     title Timeline of Industrial Revolution
     section 17th-20th century
-        Industry 1.0 : Machinery, Water power, Steam <br>power
-        Industry 1.0 : 2Machinery, Water power, Steam <br>power
+        Industry 1.0 : Machinery, Water power, Steam power
+        Industry 1.0 : 2Machinery, Water power, Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
     section 21st century
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
-
   `);
   const [section, setSection] = useState([])
 
@@ -38,8 +37,8 @@ export default function Editor() {
       setMermaidChart(`timeline
     title Timeline of Industrial Revolution
     section 17th-20th century
-        Industry 1.0 : Machinery, Water power, Steam <br>power
-                     : Machinery, Water power, Steam <br>power
+        Industry 1.0 : Machinery, Water power, Steam power
+                     : Machinery, Water power, Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
     section 21st century
@@ -209,27 +208,18 @@ export default function Editor() {
                 {item}
                 <button class="right" onClick={() => removeItem(index)}>Remove</button>
                 <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
-                <button class="right" onClick={() => setToItem(item)}>Select</button>
               </div>
             ))}
           <div>
               <h3>Add Text for: {selectedItem} to {toItem}</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
-                <option value="">Add items</option>
+                <option value="">Add event</option>
                 {items.map((item, index) => (
                   <option key={index} value={item}>
                     {item}
                   </option>
                 ))}
               </select>
-              <select value={toItem} onChange={(e) => setToItem(e.target.value)}>
-                <option value="">Add items</option>
-                {items.map((item, index) => (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select><br/>
               <input
                 type="text"
                 value={arrowText}
@@ -239,7 +229,6 @@ export default function Editor() {
               <button onClick={addArrow}>Add Arrow</button>
           </div>
 
-          <h2>Arrows</h2>
           <ul>
 
             <DragDropContext onDragEnd={onDragEnd}>
