@@ -20,6 +20,8 @@ export default function Editor() {
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
   `);
+  const [title, setTitle] = useState("Default")
+
   const [section, setSection] = useState([])
 
   const [event, setEvents] = useState([]);
@@ -195,6 +197,7 @@ export default function Editor() {
       <div className="full flex justify-center">
         <CollapsibleSpan>
         <span>
+          <input value={title} onChange={(e) => setTitle(e.target.value)}/>
           <input
             type="text"
             value={inputValue}
