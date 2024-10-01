@@ -6,6 +6,8 @@ import CollapsibleSpan from './collapsiblespan';
 
 //const fs = require('fs');
 
+//period > date > events
+
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
 export default function Editor() {
@@ -50,8 +52,10 @@ export default function Editor() {
       `)
       return
     }
-    let text = `sequenceDiagram
+    let text = `timtline
       `
+    text += 'tilte' + title + ` 
+    `
     for (let arrows of arrowList) {
       text += arrows[0] + arrows[3] + arrows[1] + ":" + arrows[2] + `
       `;
@@ -197,7 +201,8 @@ export default function Editor() {
       <div className="full flex justify-center">
         <CollapsibleSpan>
         <span>
-          <input value={title} onChange={(e) => setTitle(e.target.value)}/>
+          <span>Title</span>
+          <input value={title} onChange={(e) => setTitle(e.target.value)}/><br/>
           <input
             type="text"
             value={inputValue}
@@ -214,7 +219,7 @@ export default function Editor() {
               </div>
             ))}
           <div>
-              <h3>Add Text for: {selectedItem} to {toItem}</h3>
+              <h3>Add event for {selectedItem} period</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
                 <option value="">Add event</option>
                 {event.map((item, index) => (
