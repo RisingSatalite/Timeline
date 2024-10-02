@@ -99,6 +99,7 @@ export default function Editor() {
     }
   };
 
+  //What does this do?
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault(); // Prevent the default newline behavior
@@ -211,6 +212,7 @@ export default function Editor() {
           />
           <button onClick={addItem}>Add Item</button>
 
+
           {event.map((item, index) => (
               <div class="change" key={index}>
                 {item}
@@ -218,6 +220,45 @@ export default function Editor() {
                 <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
               </div>
             ))}
+
+<DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId={event.map((item, index) => item + index)}>
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ listStyle: 'none', padding: 0 }}
+                >
+                  {event.map((item, index) => (
+                    <Draggable key={item + index} draggableId={item + index} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            padding: '8px',
+                            margin: '0 0 8px 0',
+                            backgroundColor: '#000',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                          }}
+                        >
+                          {item}
+                          <button class="right" onClick={() => removeItem(index)}>Remove</button>
+                          <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+
+          
           <div>
               <h3>Add event for {selectedItem} period</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
