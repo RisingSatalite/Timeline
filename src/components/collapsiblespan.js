@@ -8,13 +8,13 @@ const CollapsibleSpan = ({ children }) => {
   };
 
   return (
-    <div class="show">
+    <div class="show" className='show'>
       <button onClick={toggleVisibility}>
         {isOpen ? 'Minimize' : 'Open'}
       </button>
       <br/>
       {isOpen && (
-        <span className="collapsible-content">
+        <span class="collapsible-content" className="collapsible-content">
           {children}
         </span>
       )}
