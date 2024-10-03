@@ -57,8 +57,7 @@ export default function Editor() {
     text += 'tilte' + title + ` 
     `
     for (let arrows of arrowList) {
-      text += arrows[0] + arrows[3] + arrows[1] + ":" + arrows[2] + `
-      `;
+      text += " " + arrows + " ";
     }
     setMermaidChart(text)
   }, [arrowList])
@@ -221,7 +220,7 @@ export default function Editor() {
               </div>
             ))}
 
-<DragDropContext onDragEnd={onDragEnd}>
+          <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId={event.map((item, index) => item + index)}>
               {(provided) => (
                 <ul
@@ -304,7 +303,7 @@ export default function Editor() {
                             borderRadius: '4px',
                           }}
                         >
-                          {item[0]} {item[3]} {item[1]}:{item[2]}
+                          {item}
                           <button onClick={() => removeArrowList(index)}>Remove</button>
                         </li>
                       )}
