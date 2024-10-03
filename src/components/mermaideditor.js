@@ -87,12 +87,12 @@ export default function Editor() {
     const { source, destination } = result;
   
     // If dropped in the same list, reorder within the same list
-    if (source.droppableId.includes('event-list') && destination.droppableId.includes('event-list')) {
+    if ((source.droppableId === 'event-list') && (destination.droppableId === 'event-list')) {
       const reorderedEvents = Array.from(event);
       const [removed] = reorderedEvents.splice(source.index, 1);
       reorderedEvents.splice(destination.index, 0, removed);
       setEvent(reorderedEvents);
-    }else if (source.droppableId.includes('arrow-list') && destination.droppableId.includes('arrow-list')) {
+    }else if ((source.droppableId === 'arrow-list') && (destination.droppableId === 'arrow-list')) {
       const reorderedArrows = Array.from(arrowList);
       const [removed] = reorderedArrows.splice(source.index, 1);
       reorderedArrows.splice(destination.index, 0, removed);
@@ -233,7 +233,7 @@ export default function Editor() {
             ))}
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={event.map((item, index) => "event-list " + item + index)}>
+            <Droppable droppableId="event-list">
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
