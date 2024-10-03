@@ -84,10 +84,22 @@ export default function Editor() {
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    const reorderedItems = Array.from(arrowList);
-    const [removed] = reorderedItems.splice(result.source.index, 1);
-    reorderedItems.splice(result.destination.index, 0, removed);
-    setArrowList(reorderedItems);
+    const { source, destination } = result;
+  
+    // If dropped in the same list, reorder within the same list
+    if (source.droppableId.includes('event-list') && destination.droppableId.includes('event-list')) {
+      const reorderedEvents = Array.from(event);
+      const [removed] = reorderedEvents.splice(source.index, 1);
+      reorderedEvents.splice(destination.index, 0, removed);
+      setEvent(reorderedEvents);
+    }else if (source.droppableId.includes('arrow-list') && destination.droppableId.includes('arrow-list')) {
+      const reorderedArrows = Array.from(arrowList);
+      const [removed] = reorderedArrows.splice(source.index, 1);
+      reorderedArrows.splice(destination.index, 0, removed);
+      setArrowList(reorderedArrows);
+    }else{
+      console.log("Cross list move denided")
+    }
 
   };
 
@@ -221,7 +233,7 @@ export default function Editor() {
             ))}
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={event.map((item, index) => item + index)}>
+            <Droppable droppableId={event.map((item, index) => "event-list " + item + index)}>
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
@@ -280,7 +292,7 @@ export default function Editor() {
           <ul>
 
             <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={arrowList.map((item, index) => item + index)}>
+            <Droppable droppableId="arrow-list">
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
