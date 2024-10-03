@@ -26,7 +26,7 @@ export default function Editor() {
 
   const [section, setSection] = useState([])
 
-  const [event, setEvents] = useState([]);
+  const [event, setEvent] = useState([]);
   const [inputValue, setInputValue] = useState('');
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -69,13 +69,13 @@ export default function Editor() {
 
   const addItem = () => {
     if (inputValue.trim()) {
-      setEvents([...event, inputValue.trim()]);
+      setEvent([...event, inputValue.trim()]);
       setInputValue('');
     }
   };
 
   const removeItem = (index) => {
-    setEvents(event.filter((_, i) => i !== index));
+    setEvent(event.filter((_, i) => i !== index));
   };
 
   const removeArrowList = (index) => {
@@ -84,13 +84,46 @@ export default function Editor() {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-
-    const reorderedItems = Array.from(arrowList);
-    const [removed] = reorderedItems.splice(result.source.index, 1);
-    reorderedItems.splice(result.destination.index, 0, removed);
-    setArrowList(reorderedItems);
-
+  
+    const { source, destination } = result;
+  
+    // If dropped in the same list, reorder within the same list
+    if (source.droppableId === destination.droppableId) {
+      if (source.droppableId === 'event-list') {
+        const reorderedEvents = Array.from(event);
+        const [removed] = reorderedEvents.splice(source.index, 1);
+        reorderedEvents.splice(destination.index, 0, removed);
+        setEvent(reorderedEvents);
+      }
+  
+      if (source.droppableId === 'arrow-list') {
+        const reorderedArrows = Array.from(arrowList);
+        const [removed] = reorderedArrows.splice(source.index, 1);
+        reorderedArrows.splice(destination.index, 0, removed);
+        setArrowList(reorderedArrows);
+      }
+    } else {
+      // If dropped between different lists
+      if (source.droppableId === 'event-list' && destination.droppableId === 'arrow-list') {
+        const sourceClone = Array.from(event);
+        const destClone = Array.from(arrowList);
+        const [removed] = sourceClone.splice(source.index, 1);
+        destClone.splice(destination.index, 0, removed);
+  
+        setEvent(sourceClone);
+        setArrowList(destClone);
+      } else if (source.droppableId === 'arrow-list' && destination.droppableId === 'event-list') {
+        const sourceClone = Array.from(arrowList);
+        const destClone = Array.from(event);
+        const [removed] = sourceClone.splice(source.index, 1);
+        destClone.splice(destination.index, 0, removed);
+  
+        setArrowList(sourceClone);
+        setEvent(destClone);
+      }
+    }
   };
+  
 
   const addArrow = () => {
     if (selectedItem && toItem && arrowText.trim()) {
@@ -165,7 +198,7 @@ export default function Editor() {
         }
         // Set columns
         // Use set to remove duplicates
-        setEvents(Array.from(new Set(columns)));
+        setEvent(Array.from(new Set(columns)));
   
         setMermaidChart(importedData);
       } catch (error) {
@@ -222,43 +255,43 @@ export default function Editor() {
             ))}
 
 <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={event.map((item, index) => item + index)}>
-              {(provided) => (
-                <ul
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={{ listStyle: 'none', padding: 0 }}
-                >
-                  {event.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            padding: '8px',
-                            margin: '0 0 8px 0',
-                            backgroundColor: '#000',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                          }}
-                        >
-                          {item}
-                          <button class="right" onClick={() => removeItem(index)}>Remove</button>
-                          <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
+  {/* First Droppable List for Events */}
+  <Droppable droppableId="event-list">
+    {(provided) => (
+      <ul
+        {...provided.droppableProps}
+        ref={provided.innerRef}
+        style={{ listStyle: 'none', padding: 0 }}
+      >
+        {event.map((item, index) => (
+          <Draggable key={item + index} draggableId={item + index} index={index}>
+            {(provided) => (
+              <li
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                style={{
+                  ...provided.draggableProps.style,
+                  padding: '8px',
+                  margin: '0 0 8px 0',
+                  backgroundColor: '#000',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                }}
+              >
+                {item}
+                <button className="right" onClick={() => removeItem(index)}>Remove</button>
+                <button className="right" onClick={() => setSelectedItem(item)}>Select</button>
+              </li>
+            )}
+          </Draggable>
+        ))}
+        {provided.placeholder}
+      </ul>
+    )}
+  </Droppable>
 
-          
+
           <div>
               <h3>Add event for {selectedItem} period</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
@@ -278,44 +311,41 @@ export default function Editor() {
               <button onClick={addArrow}>Add Arrow</button>
           </div>
 
-          <ul>
-
-            <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={arrowList.map((item, index) => item + index)}>
-              {(provided) => (
-                <ul
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={{ listStyle: 'none', padding: 0 }}
-                >
-                  {arrowList.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            padding: '8px',
-                            margin: '0 0 8px 0',
-                            backgroundColor: '#000',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                          }}
-                        >
-                          {item[0]} {item[3]} {item[1]}:{item[2]}
-                          <button onClick={() => removeArrowList(index)}>Remove</button>
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-          </ul>
+            {/* Second Droppable List for Arrow List */}
+  <Droppable droppableId="arrow-list">
+    {(provided) => (
+      <ul
+        {...provided.droppableProps}
+        ref={provided.innerRef}
+        style={{ listStyle: 'none', padding: 0 }}
+      >
+        {arrowList.map((item, index) => (
+          <Draggable key={item + index} draggableId={item + index} index={index}>
+            {(provided) => (
+              <li
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                style={{
+                  ...provided.draggableProps.style,
+                  padding: '8px',
+                  margin: '0 0 8px 0',
+                  backgroundColor: '#000',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                }}
+              >
+                {item[0]} {item[3]} {item[1]}:{item[2]}
+                <button onClick={() => removeArrowList(index)}>Remove</button>
+              </li>
+            )}
+          </Draggable>
+        ))}
+        {provided.placeholder}
+      </ul>
+    )}
+  </Droppable>
+</DragDropContext>
         </span>
         </CollapsibleSpan>
         <span className="half flex-1">
