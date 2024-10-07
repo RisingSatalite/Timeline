@@ -92,8 +92,8 @@ export default function Editor() {
   };
 
   const addArrow = () => {
-    if (selectedItem && toItem && arrowText.trim()) {
-      setArrowList([...arrowList, [ selectedItem, toItem, arrowText.trim()]]);
+    if (selectedItem && arrowText.trim()) {
+      setArrowList([...arrowList, [ selectedItem, arrowText.trim()]]);
       setArrowText('');
     }
   };
@@ -303,7 +303,10 @@ export default function Editor() {
                             borderRadius: '4px',
                           }}
                         >
-                          {item}
+                          {/*This item will give error if undefined*/}
+                          {item[0]}
+                          <span> </span>
+                          {item[1]}
                           <button onClick={() => removeArrowList(index)}>Remove</button>
                         </li>
                       )}
