@@ -304,9 +304,7 @@ export default function Editor() {
                           }}
                         >
                           {/*This item will give error if undefined*/}
-                          {item[0]}
-                          <span> </span>
-                          {item[1]}
+                          {item?.[0] && <span>{item[0]} {item[1]}</span>}
                           <button onClick={() => removeArrowList(index)}>Remove</button>
                         </li>
                       )}
