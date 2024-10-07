@@ -229,7 +229,7 @@ export default function Editor() {
                   style={{ listStyle: 'none', padding: 0 }}
                 >
                   {event.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
+                    <Draggable key={item + index} draggableId={item + index.toString()} index={index}>
                       {(provided) => (
                         <li
                           ref={provided.innerRef}
@@ -288,7 +288,7 @@ export default function Editor() {
                   style={{ listStyle: 'none', padding: 0 }}
                 >
                   {arrowList.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
+                    <Draggable key={item + index} draggableId={item + index.toString()} index={index}>
                       {(provided) => (
                         <li
                           ref={provided.innerRef}
