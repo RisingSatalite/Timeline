@@ -52,12 +52,12 @@ export default function Editor() {
       `)
       return
     }
-    let text = `timtline
+    let text = `timeline
       `
-    text += 'tilte' + title + ` 
+    text += 'title ' + title + ` 
     `
     for (let arrows of arrowList) {
-      text += " " + arrows + " ";
+      text += arrows[0] + " : " + arrows[1] + "/n";
     }
     setMermaidChart(text)
   }, [arrowList])
@@ -104,8 +104,8 @@ export default function Editor() {
   };  
 
   const addArrow = () => {
-    if (selectedItem && toItem && arrowText.trim()) {
-      setArrowList([...arrowList, [ selectedItem, toItem, arrowText.trim()]]);
+    if (selectedItem && arrowText.trim()) {
+      setArrowList([...arrowList, [ selectedItem, arrowText.trim()]]);
       setArrowText('');
     }
   };
@@ -199,6 +199,9 @@ export default function Editor() {
   return (
     <main>
       <div>
+        {mermaidChart}
+      </div>
+      <div>
         <button onClick={handleExport}>Export Data</button>
         <input
           type="file"
@@ -242,7 +245,7 @@ export default function Editor() {
                   style={{ listStyle: 'none', padding: 0 }}
                 >
                   {event.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
+                    <Draggable key={item + index} draggableId={item + index.toString()} index={index}>
                       {(provided) => (
                         <li
                           ref={provided.innerRef}
@@ -323,7 +326,43 @@ export default function Editor() {
             )}
           </Droppable>
         </DragDropContext>
-
+            <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId={arrowList.map((item, index) => item + index)}>
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ listStyle: 'none', padding: 0 }}
+                >
+                  {arrowList.map((item, index) => (
+                    <Draggable key={item + index} draggableId={item + index.toString()} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            padding: '8px',
+                            margin: '0 0 8px 0',
+                            backgroundColor: '#000',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                          }}
+                        >
+                          {/*This item will give error if undefined*/}
+                          {item?.[0] && <span>{item[0]} {item[1]}</span>}
+                          <button onClick={() => removeArrowList(index)}>Remove</button>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+          </ul>
         </span>
         </CollapsibleSpan>
         <span className="half flex-1">
