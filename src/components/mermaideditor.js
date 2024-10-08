@@ -82,14 +82,26 @@ export default function Editor() {
   }
 
   const onDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const reorderedItems = Array.from(arrowList);
-    const [removed] = reorderedItems.splice(result.source.index, 1);
-    reorderedItems.splice(result.destination.index, 0, removed);
-    setArrowList(reorderedItems);
-
-  };
+    if (!result.destination) return; // If dropped outside any droppable, exit
+  
+    const { source, destination } = result;
+  
+    // Reordering within the same list
+    if (source.droppableId === 'event-list' && destination.droppableId === 'event-list') {
+      const reorderedEvents = Array.from(event);
+      const [removed] = reorderedEvents.splice(source.index, 1); // Remove from source index
+      reorderedEvents.splice(destination.index, 0, removed); // Insert at destination index
+      setEvent(reorderedEvents); // Update state
+    } else if (source.droppableId === 'arrow-list' && destination.droppableId === 'arrow-list') {
+      const reorderedArrows = Array.from(arrowList);
+      const [removed] = reorderedArrows.splice(source.index, 1); // Remove from source index
+      reorderedArrows.splice(destination.index, 0, removed); // Insert at destination index
+      setArrowList(reorderedArrows); // Update state
+    } else {
+      // Handle cross-list moves (denied or allowed depending on your app logic)
+      console.log("Cross-list move denied");
+    }
+  };  
 
   const addArrow = () => {
     if (selectedItem && arrowText.trim()) {
@@ -224,7 +236,8 @@ export default function Editor() {
             ))}
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={event.map((item, index) => item + index)}>
+            {/* First Droppable: event-list */}
+            <Droppable droppableId="event-list">
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
@@ -248,8 +261,8 @@ export default function Editor() {
                           }}
                         >
                           {item}
-                          <button class="right" onClick={() => removeItem(index)}>Remove</button>
-                          <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
+                          <button className="right" onClick={() => removeItem(index)}>Remove</button>
+                          <button className="right" onClick={() => setSelectedItem(item)}>Select</button>
                         </li>
                       )}
                     </Draggable>
@@ -258,7 +271,6 @@ export default function Editor() {
                 </ul>
               )}
             </Droppable>
-          </DragDropContext>
 
           
           <div>
@@ -280,8 +292,40 @@ export default function Editor() {
               <button onClick={addArrow}>Add Arrow</button>
           </div>
 
-          <ul>
-
+          <Droppable droppableId="arrow-list">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ listStyle: 'none', padding: 0, marginTop: '20px' }}
+              >
+                {arrowList.map((item, index) => (
+                  <Draggable key={item + index} draggableId={item + index} index={index}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          padding: '8px',
+                          margin: '0 0 8px 0',
+                          backgroundColor: '#000',
+                          border: '1px solid #ddd',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        {item}
+                        <button onClick={() => removeArrowList(index)}>Remove</button>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
             <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId={arrowList.map((item, index) => item + index)}>
               {(provided) => (
