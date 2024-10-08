@@ -52,12 +52,12 @@ export default function Editor() {
       `)
       return
     }
-    let text = `timtline
+    let text = `timeline
       `
-    text += 'tilte' + title + ` 
+    text += 'title ' + title + ` 
     `
     for (let arrows of arrowList) {
-      text += " " + arrows + " ";
+      text += arrows[0] + " : " + arrows[1] + "/n";
     }
     setMermaidChart(text)
   }, [arrowList])
@@ -186,6 +186,9 @@ export default function Editor() {
   
   return (
     <main>
+      <div>
+        {mermaidChart}
+      </div>
       <div>
         <button onClick={handleExport}>Export Data</button>
         <input
