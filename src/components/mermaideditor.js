@@ -56,8 +56,14 @@ export default function Editor() {
       `
     text += 'title ' + title + ` 
     `
-    for (let arrows of arrowList) {
-      text += arrows[0] + " : " + arrows[1] + "/n";
+    for(const i of event){
+      text += i
+      for (let arrows of arrowList) {
+        if(arrows[0] == i){
+          text += " : " + arrows[1];
+        }
+      }
+      text += "\n"
     }
     setMermaidChart(text)
   }, [arrowList])
@@ -186,9 +192,9 @@ export default function Editor() {
   
   return (
     <main>
-      <div>
+      <span>
         {mermaidChart}
-      </div>
+      </span>
       <div>
         <button onClick={handleExport}>Export Data</button>
         <input
@@ -260,7 +266,6 @@ export default function Editor() {
             </Droppable>
           </DragDropContext>
 
-          
           <div>
               <h3>Add event for {selectedItem} period</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
