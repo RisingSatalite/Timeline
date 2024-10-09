@@ -231,6 +231,7 @@ export default function Editor() {
             onKeyDown={(e) => e.key === 'Enter' && addItem()}
           />
           <button onClick={addItem}>Add Item</button>
+        </span>
 
 
           {event.map((item, index) => (
@@ -367,13 +368,10 @@ export default function Editor() {
               )}
             </Droppable>
           </DragDropContext>
-          </ul>
-        </span>
         </CollapsibleSpan>
         <span className="half flex-1">
           <Mermaid chart={mermaidChart} key={mermaidChart} />
         </span>
-        
       </div>
     </main>
   );
