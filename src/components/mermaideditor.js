@@ -97,6 +97,16 @@ export default function Editor() {
 
   };
 
+  const onDragEndEvent = (result) => {
+    if (!result.destination) return;
+
+    const reorderedItems = Array.from(event);
+    const [removed] = reorderedItems.splice(result.source.index, 1);
+    reorderedItems.splice(result.destination.index, 0, removed);
+    setEvents(reorderedItems);
+
+  };
+
   const addArrow = () => {
     if (selectedItem && arrowText.trim()) {
       setArrowList([...arrowList, [ selectedItem, arrowText.trim()]]);
@@ -229,7 +239,7 @@ export default function Editor() {
               </div>
             ))}
 
-          <DragDropContext onDragEnd={onDragEnd}>
+          <DragDropContext onDragEnd={onDragEndEvent}>
             <Droppable droppableId={event.map((item, index) => item + index)}>
               {(provided) => (
                 <ul
