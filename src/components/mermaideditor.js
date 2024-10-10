@@ -140,7 +140,7 @@ export default function Editor() {
     for (let arrows of arrowList) {
       text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + '\n';
     }
-    downloadFile('sequencediagram.txt', text);
+    downloadFile('sequencediagram.tld', text);
   };
 
   const handleFileUpload = (event) => {
