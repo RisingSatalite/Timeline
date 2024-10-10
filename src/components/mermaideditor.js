@@ -202,9 +202,6 @@ export default function Editor() {
   
   return (
     <main>
-      <span>
-        {mermaidChart}
-      </span>
       <div>
         <button onClick={handleExport}>Export Data</button>
         <input
