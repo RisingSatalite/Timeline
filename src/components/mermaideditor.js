@@ -13,12 +13,10 @@ const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 export default function Editor() {
   const [mermaidChart, setMermaidChart] = useState(`timeline
     title Timeline of Industrial Revolution
-    section 17th-20th century
         Industry 1.0 : Machinery, Water power, Steam power
         Industry 1.0 : 2Machinery, Water power, Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
-    section 21st century
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
   `);
@@ -40,12 +38,10 @@ export default function Editor() {
       //Set to default
       setMermaidChart(`timeline
     title Timeline of Industrial Revolution
-    section 17th-20th century
         Industry 1.0 : Machinery, Water power, Steam power
                      : Machinery, Water power, Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
-    section 21st century
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
 
@@ -147,8 +143,18 @@ export default function Editor() {
   
   const handleExport = () => {
     let text = ''
-    for (let arrows of arrowList) {
-      text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + '\n';
+    text += title + '\n'
+    //title
+    //event
+    //arrowlist
+    for(const i of events){
+      text += i
+      for (let arrows of arrowList) {
+        if(arrows[0] == i){
+          text += " : " + arrows[1];
+        }
+      }
+      text += '\n'
     }
     downloadFile('sequencediagram.tld', text);
   };
@@ -206,7 +212,7 @@ export default function Editor() {
         <button onClick={handleExport}>Export Data</button>
         <input
           type="file"
-          accept=".txt"
+          accept=".tld"
           onChange={handleFileUpload}
           style={{ display: 'none' }}
           id="fileInput"
