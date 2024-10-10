@@ -166,27 +166,34 @@ export default function Editor() {
     reader.onload = (e) => {
       const content = e.target.result;
       try {
-        let columns = [];
+        let newEvents = [];
         const importedData = content;
         console.log("All");
         console.log(importedData);
   
         // Read data
         let lines = importedData.split('\n');
+        let flagFirst = true
         for (const line of lines) { // Corrected the loop
+          if(flagFirst){
+            setTitle(line)
+            flagFirst = false
+          }
           console.log(line);
-          let sections = line.split(",");
-          if (sections.length == 4) {
-            console.log(sections);
-            // Set arrows
-            setArrowList((arrowList) => [...arrowList, [sections[0], sections[2], sections[3], sections[1]]]);
-            columns.push(sections[0]);
-            columns.push(sections[2]);
+          let sections = line.split(":");
+          let firstFlag2 = true;
+          let firstEvent = ""
+          for(let i of sections){
+            if(firstFlag2){
+              newEvents.push(i)
+              firstEvent = i
+              firstFlag2 = false
+            }
+            setArrowList(...arrowList, [firstEvent, i])
           }
         }
-        // Set columns
-        // Use set to remove duplicates
-        setEvents(Array.from(new Set(columns)));
+
+        setEvents(Array.from(new Set(newEvents)));
   
         setMermaidChart(importedData);
       } catch (error) {
