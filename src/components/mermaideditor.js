@@ -26,7 +26,7 @@ export default function Editor() {
 
   const [section, setSection] = useState([])
 
-  const [event, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [inputValue, setInputValue] = useState('');
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -56,7 +56,7 @@ export default function Editor() {
       `
     text += 'title ' + title + ` 
     `
-    for(const i of event){
+    for(const i of events){
       text += i
       for (let arrows of arrowList) {
         if(arrows[0] == i){
@@ -74,13 +74,13 @@ export default function Editor() {
 
   const addItem = () => {
     if (inputValue.trim()) {
-      setEvents([...event, inputValue.trim()]);
+      setEvents([...events, inputValue.trim()]);
       setInputValue('');
     }
   };
 
   const removeItem = (index) => {
-    setEvents(event.filter((_, i) => i !== index));
+    setEvents(events.filter((_, i) => i !== index));
   };
 
   const removeArrowList = (index) => {
@@ -94,6 +94,16 @@ export default function Editor() {
     const [removed] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, removed);
     setArrowList(reorderedItems);
+
+  };
+
+  const onDragEndEvent = (result) => {
+    if (!result.destination) return;
+
+    const reorderedItems = Array.from(events);
+    const [removed] = reorderedItems.splice(result.source.index, 1);
+    reorderedItems.splice(result.destination.index, 0, removed);
+    setEvents(reorderedItems);
 
   };
 
@@ -192,9 +202,6 @@ export default function Editor() {
   
   return (
     <main>
-      <span>
-        {mermaidChart}
-      </span>
       <div>
         <button onClick={handleExport}>Export Data</button>
         <input
@@ -221,7 +228,7 @@ export default function Editor() {
           <button onClick={addItem}>Add Item</button>
 
 
-          {event.map((item, index) => (
+          {events.map((item, index) => (
               <div class="change" key={index}>
                 {item}
                 <button class="right" onClick={() => removeItem(index)}>Remove</button>
@@ -229,15 +236,15 @@ export default function Editor() {
               </div>
             ))}
 
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={event.map((item, index) => item + index)}>
+          <DragDropContext onDragEnd={onDragEndEvent}>
+            <Droppable droppableId={events.map((item, index) => item + index)}>
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   style={{ listStyle: 'none', padding: 0 }}
                 >
-                  {event.map((item, index) => (
+                  {events.map((item, index) => (
                     <Draggable key={item + index} draggableId={item + index.toString()} index={index}>
                       {(provided) => (
                         <li
@@ -270,7 +277,7 @@ export default function Editor() {
               <h3>Add event for {selectedItem} period</h3>
               <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
                 <option value="">Add event</option>
-                {event.map((item, index) => (
+                {events.map((item, index) => (
                   <option key={index} value={item}>
                     {item}
                   </option>
