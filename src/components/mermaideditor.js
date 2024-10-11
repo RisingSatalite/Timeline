@@ -63,7 +63,7 @@ export default function Editor() {
       text += "\n"
     }
     setMermaidChart(text)
-  }, [title, arrowList])
+  }, [title, events, arrowList])
 
   const change = (e) => {
     setMermaidChart(e.target.value);
