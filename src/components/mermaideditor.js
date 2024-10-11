@@ -191,11 +191,12 @@ export default function Editor() {
                 firstFlag2 = false
               }else{
                 console.log([firstEvent, i])
-                setArrowList(...arrowList, [firstEvent, i])
+                setArrowList([...arrowList, [firstEvent, i]])
               }
             }
           }
         }
+        console.log(arrowList)
 
         setEvents(Array.from(new Set(newEvents)));
   
