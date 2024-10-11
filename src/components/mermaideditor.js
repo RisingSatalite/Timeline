@@ -63,7 +63,7 @@ export default function Editor() {
       text += "\n"
     }
     setMermaidChart(text)
-  }, [arrowList])
+  }, [title, events, arrowList])
 
   const change = (e) => {
     setMermaidChart(e.target.value);
@@ -190,7 +190,7 @@ export default function Editor() {
             for(let i of sections){
               if(firstFlag2){
                 newEvents.push(i.trim())
-                firstEvent = i
+                firstEvent = i.trim()
                 firstFlag2 = false
               }else{
                 console.log([firstEvent, i])
@@ -204,6 +204,7 @@ export default function Editor() {
 
         setEvents(Array.from(new Set(newEvents)));
         setArrowList(newArrowList)
+        console.log(newArrowList)
   
         setMermaidChart(importedData);
       } catch (error) {
@@ -225,6 +226,7 @@ export default function Editor() {
   
   return (
     <main>
+      {/*<span>{mermaidChart}</span>*/}
       <div>
         <button onClick={handleExport}>Export Data</button>
         <input
@@ -249,15 +251,6 @@ export default function Editor() {
             onKeyDown={(e) => e.key === 'Enter' && addItem()}
           />
           <button onClick={addItem}>Add Item</button>
-
-
-          {events.map((item, index) => (
-              <div class="change" key={index}>
-                {item}
-                <button class="right" onClick={() => removeItem(index)}>Remove</button>
-                <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
-              </div>
-            ))}
 
           <DragDropContext onDragEnd={onDragEndEvent}>
             <Droppable droppableId={events.map((item, index) => item + index)}>
