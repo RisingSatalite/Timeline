@@ -175,21 +175,25 @@ export default function Editor() {
         let lines = importedData.split('\n');
         let flagFirst = true
         for (const line of lines) { // Corrected the loop
+          console.log(line);
           if(flagFirst){
             setTitle(line)
             flagFirst = false
-          }
-          console.log(line);
-          let sections = line.split(":");
-          let firstFlag2 = true;
-          let firstEvent = ""
-          for(let i of sections){
-            if(firstFlag2){
-              newEvents.push(i)
-              firstEvent = i
-              firstFlag2 = false
+          }else if(line == "" || line == null){
+          }else{
+            let sections = line.split(":");
+            let firstFlag2 = true;
+            let firstEvent = ""
+            for(let i of sections){
+              if(firstFlag2){
+                newEvents.push(i)
+                firstEvent = i
+                firstFlag2 = false
+              }else{
+                console.log([firstEvent, i])
+                setArrowList(...arrowList, [firstEvent, i])
+              }
             }
-            setArrowList(...arrowList, [firstEvent, i])
           }
         }
 
