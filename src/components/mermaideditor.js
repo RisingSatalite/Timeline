@@ -13,12 +13,10 @@ const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 export default function Editor() {
   const [mermaidChart, setMermaidChart] = useState(`timeline
     title Timeline of Industrial Revolution
-    section 17th-20th century
         Industry 1.0 : Machinery, Water power, Steam power
         Industry 1.0 : 2Machinery, Water power, Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
-    section 21st century
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
   `);
@@ -40,12 +38,11 @@ export default function Editor() {
       //Set to default
       setMermaidChart(`timeline
     title Timeline of Industrial Revolution
-    section 17th-20th century
-        Industry 1.0 : Machinery, Water power, Steam power
-                     : Machinery, Water power, Steam power
+        Industry 1.0 : Machinery
+                     : Water power
+                     : Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
-    section 21st century
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
 
@@ -147,10 +144,20 @@ export default function Editor() {
   
   const handleExport = () => {
     let text = ''
-    for (let arrows of arrowList) {
-      text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + '\n';
+    text += title + '\n'
+    //title
+    //event
+    //arrowlist
+    for(const i of events){
+      text += i
+      for (let arrows of arrowList) {
+        if(arrows[0] == i){
+          text += " : " + arrows[1];
+        }
+      }
+      text += '\n'
     }
-    downloadFile('sequencediagram.txt', text);
+    downloadFile('sequencediagram.tld', text);
   };
 
   const handleFileUpload = (event) => {
@@ -160,27 +167,43 @@ export default function Editor() {
     reader.onload = (e) => {
       const content = e.target.result;
       try {
-        let columns = [];
+        let newEvents = [];
         const importedData = content;
         console.log("All");
         console.log(importedData);
+
+        let newArrowList = []
   
         // Read data
         let lines = importedData.split('\n');
+        let flagFirst = true
         for (const line of lines) { // Corrected the loop
           console.log(line);
-          let sections = line.split(",");
-          if (sections.length == 4) {
-            console.log(sections);
-            // Set arrows
-            setArrowList((arrowList) => [...arrowList, [sections[0], sections[2], sections[3], sections[1]]]);
-            columns.push(sections[0]);
-            columns.push(sections[2]);
+          if(flagFirst){
+            setTitle(line.trim())
+            flagFirst = false
+          }else if(line == "" || line == null){
+          }else{
+            let sections = line.split(":");
+            let firstFlag2 = true;
+            let firstEvent = ""
+            for(let i of sections){
+              if(firstFlag2){
+                newEvents.push(i.trim())
+                firstEvent = i
+                firstFlag2 = false
+              }else{
+                console.log([firstEvent, i])
+                //console.log(arrowList)
+                newArrowList.push([firstEvent, i])
+              }
+            }
           }
         }
-        // Set columns
-        // Use set to remove duplicates
-        setEvents(Array.from(new Set(columns)));
+        console.log(arrowList)
+
+        setEvents(Array.from(new Set(newEvents)));
+        setArrowList(newArrowList)
   
         setMermaidChart(importedData);
       } catch (error) {
@@ -206,7 +229,7 @@ export default function Editor() {
         <button onClick={handleExport}>Export Data</button>
         <input
           type="file"
-          accept=".txt"
+          accept=".tld"
           onChange={handleFileUpload}
           style={{ display: 'none' }}
           id="fileInput"
