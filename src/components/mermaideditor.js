@@ -38,8 +38,9 @@ export default function Editor() {
       //Set to default
       setMermaidChart(`timeline
     title Timeline of Industrial Revolution
-        Industry 1.0 : Machinery, Water power, Steam power
-                     : Machinery, Water power, Steam power
+        Industry 1.0 : Machinery
+                     : Water power
+                     : Steam power
         Industry 2.0 : Electricity, Internal combustion engine, Mass production
         Industry 3.0 : Electronics, Computers, Automation
         Industry 4.0 : Internet, Robotics, Internet of Things
@@ -170,6 +171,8 @@ export default function Editor() {
         const importedData = content;
         console.log("All");
         console.log(importedData);
+
+        let newArrowList = []
   
         // Read data
         let lines = importedData.split('\n');
@@ -177,7 +180,7 @@ export default function Editor() {
         for (const line of lines) { // Corrected the loop
           console.log(line);
           if(flagFirst){
-            setTitle(line)
+            setTitle(line.trim())
             flagFirst = false
           }else if(line == "" || line == null){
           }else{
@@ -186,12 +189,13 @@ export default function Editor() {
             let firstEvent = ""
             for(let i of sections){
               if(firstFlag2){
-                newEvents.push(i)
+                newEvents.push(i.trim())
                 firstEvent = i
                 firstFlag2 = false
               }else{
                 console.log([firstEvent, i])
-                setArrowList([...arrowList, [firstEvent, i]])
+                //console.log(arrowList)
+                newArrowList.push([firstEvent, i])
               }
             }
           }
@@ -199,6 +203,7 @@ export default function Editor() {
         console.log(arrowList)
 
         setEvents(Array.from(new Set(newEvents)));
+        setArrowList(newArrowList)
   
         setMermaidChart(importedData);
       } catch (error) {
