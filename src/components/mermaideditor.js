@@ -45,7 +45,6 @@ export default function Editor() {
         Industry 3.0 : Electronics, Computers, Automation
         Industry 4.0 : Internet, Robotics, Internet of Things
         Industry 5.0 : Artificial intelligence, Big data, 3D printing
-
       `)
       return
     }
@@ -102,6 +101,16 @@ export default function Editor() {
     reorderedItems.splice(result.destination.index, 0, removed);
     setEvents(reorderedItems);
 
+    //Reset arrowlist to match the reorder of events
+    const reorderedA = []
+    for(let i of reorderedItems){//Use reorderedItems instead of Events, as Event may not be set yet
+      for (let arrows of arrowList) {
+        if(arrows[0] == i){
+          reorderedA.push(arrows)
+        }
+      }
+    }
+    setArrowList(reorderedA)
   };
 
   const addArrow = () => {
