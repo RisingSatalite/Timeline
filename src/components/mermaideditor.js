@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CollapsibleSpan from './collapsiblespan';
 
-//const fs = require('fs');
-
 //period > date > events
 
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
